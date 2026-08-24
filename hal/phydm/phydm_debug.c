@@ -5154,8 +5154,13 @@ void phydm_fw_trace_handler(void *dm_void, u8 *cmd_buf, u8 cmd_len)
 		return;
 	}
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(7, 2, 0))
+	memcpy_and_pad(&dm->fw_debug_trace[dm->c2h_cmd_start], (cmd_len - 1),
+		       &cmd_buf[1], (cmd_len - 1), '\0');
+#else
 	strncpy((char *)&dm->fw_debug_trace[dm->c2h_cmd_start],
 		(char *)&cmd_buf[1], (cmd_len - 1));
+#endif
 	dm->c2h_cmd_start += (cmd_len - 1);
 	dm->fw_buff_is_enpty = false;
 
