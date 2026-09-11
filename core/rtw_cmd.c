@@ -5051,6 +5051,7 @@ inline u8 rtw_customer_str_write_cmd(_adapter *adapter, const u8 *cstr)
 }
 #endif /* CONFIG_RTW_CUSTOMER_STR */
 
+#if defined(CONFIG_FW_C2H_REG) || defined(CONFIG_FW_C2H_PKT)
 static u8 rtw_c2h_wk_cmd(PADAPTER padapter, u8 *pbuf, u16 length, u8 type)
 {
 	struct cmd_obj *ph2c;
@@ -5093,6 +5094,7 @@ static u8 rtw_c2h_wk_cmd(PADAPTER padapter, u8 *pbuf, u16 length, u8 type)
 exit:
 	return res;
 }
+#endif
 
 #ifdef CONFIG_FW_C2H_REG
 inline u8 rtw_c2h_reg_wk_cmd(_adapter *adapter, u8 *c2h_evt)

@@ -151,6 +151,7 @@ struct rtw_wdev_priv {
 
 	struct cfg80211_connect_params *connect_req;
 	_lock connect_req_lock;
+	struct cfg80211_roam_info roam_info; /* built under connect_req_lock */
 
 	struct net_device *pmon_ndev;/* for monitor interface */
 	char ifname_mon[IFNAMSIZ + 1]; /* interface name for monitor interface */

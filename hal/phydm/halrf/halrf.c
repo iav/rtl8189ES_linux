@@ -797,7 +797,7 @@ void halrf_support_ability_debug(void *dm_void, char input[][16], u32 *_used,
 	u8 i;
 
 	for (i = 0; i < 5; i++)
-		if (input[i + 1])
+		if (input[i + 1][0])
 			PHYDM_SSCANF(input[i + 2], DCMD_DECIMAL, &dm_value[i]);
 
 	if (dm_value[0] == 100) {
@@ -860,7 +860,7 @@ void halrf_support_band_shift_debug(void *dm_void, char input[][16], u32 *_used,
 
 #if (RTL8192F_SUPPORT == 1)
 	for (i = 0; i < 7; i++)
-		if (input[i + 1])
+		if (input[i + 1][0])
 			PHYDM_SSCANF(input[i + 2], DCMD_DECIMAL, &dm_value[i]);
 
 	if (!(rf->rf_supportability & HAL_2GBAND_SHIFT)) {
@@ -1015,7 +1015,7 @@ u64 halrf_cmn_info_get(void *dm_void, u32 cmn_info)
 	return return_value;
 }
 
-void halrf_supportability_init_mp(void *dm_void)
+static void halrf_supportability_init_mp(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct _hal_rf_ *rf = &dm->rf_table;
@@ -1458,7 +1458,7 @@ void config_halrf_path_adda_setting_trigger(void *dm_void)
 	
 }
 
-void halrf_dack_trigger(void *dm_void)
+static void halrf_dack_trigger(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct _hal_rf_ *rf = &dm->rf_table;
@@ -2013,7 +2013,7 @@ void halrf_lck_trigger(void *dm_void)
 	}
 }
 
-void halrf_aac_check(struct dm_struct *dm)
+static void halrf_aac_check(struct dm_struct *dm)
 {
 	switch (dm->support_ic_type) {
 #if (RTL8821C_SUPPORT == 1)
@@ -2035,7 +2035,7 @@ void halrf_aac_check(struct dm_struct *dm)
 	}
 }
 
-void halrf_x2k_check(struct dm_struct *dm)
+static void halrf_x2k_check(struct dm_struct *dm)
 {
 
 	switch (dm->support_ic_type) {
@@ -2830,39 +2830,6 @@ halrf_config_rfk_with_header_file(void *dm_void, u32 config_type)
 #endif
 
 	return result;
-}
-
-void halrf_txgapk_trigger(void *dm_void)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct _hal_rf_ *rf = &dm->rf_table;
-
-	u64 start_time;
-
-	start_time = odm_get_current_time(dm);
-
-	switch (dm->support_ic_type) {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_IOT))
-#if (RTL8195B_SUPPORT == 1)
-	case ODM_RTL8195B:
-		phy_txgap_calibrate_8195b(dm, false);
-	break;
-#endif
-#if (RTL8721D_SUPPORT == 1)
-	case ODM_RTL8721D:
-		phy_txgap_calibrate_8721d(dm, false);
-	break;
-#endif
-
-#endif
-
-	default:
-		break;
-	}
-	rf->dpk_progressing_time =
-		odm_get_progressing_time(dm_void, start_time);
-	RF_DBG(dm, DBG_RF_TXGAPK, "[TGGC]TXGAPK progressing_time = %lld ms\n",
-	       rf->dpk_progressing_time);
 }
 
 void halrf_tssi_get_efuse(void *dm_void)

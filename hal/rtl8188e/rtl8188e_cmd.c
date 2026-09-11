@@ -142,24 +142,6 @@ exit:
 	return ret;
 }
 
-u8 rtl8192c_h2c_msg_hdl(_adapter *padapter, unsigned char *pbuf)
-{
-	u8 ElementID, CmdLen;
-	u8 *pCmdBuffer;
-	struct cmd_msg_parm  *pcmdmsg;
-
-	if (!pbuf)
-		return H2C_PARAMETERS_ERROR;
-
-	pcmdmsg = (struct cmd_msg_parm *)pbuf;
-	ElementID = pcmdmsg->eid;
-	CmdLen = pcmdmsg->sz;
-	pCmdBuffer = pcmdmsg->buf;
-
-	FillH2CCmd_88E(padapter, ElementID, CmdLen, pCmdBuffer);
-
-	return H2C_SUCCESS;
-}
 #if 0
 #if defined(CONFIG_AUTOSUSPEND) && defined(SUPPORT_HW_RFOFF_DETECTED)
 u8 rtl8192c_set_FwSelectSuspend_cmd(_adapter *padapter , u8 bfwpoll, u16 period)

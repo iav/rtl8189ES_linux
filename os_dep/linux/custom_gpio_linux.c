@@ -13,6 +13,7 @@
  *
  *****************************************************************************/
 #include "drv_types.h"
+#include <custom_gpio.h>
 
 #ifdef CONFIG_PLATFORM_SPRD
 
@@ -301,8 +302,6 @@ void rtw_wifi_gpio_wlan_ctrl(int onoff)
 #ifdef CONFIG_GPIO_API
 /* this is a demo for extending GPIO pin[7] as interrupt mode */
 struct net_device *rtl_net;
-extern int rtw_register_gpio_interrupt(struct net_device *netdev, int gpio_num, void(*callback)(u8 level));
-extern int rtw_disable_gpio_interrupt(struct net_device *netdev, int gpio_num);
 void gpio_int(u8 is_high)
 {
 	RTW_INFO("%s level=%d\n", __func__, is_high);

@@ -5754,7 +5754,6 @@ static int rtw_cta_test_start(struct net_device *dev,
 	return ret;
 }
 #endif
-extern int rtw_change_ifname(_adapter *padapter, const char *ifname);
 static int rtw_rereg_nd_name(struct net_device *dev,
 			     struct iw_request_info *info,
 			     union iwreq_data *wrqu, char *extra)
@@ -11357,7 +11356,6 @@ static int rtw_tdls_get(struct net_device *dev,
 extern void rtl8188e_cal_txdesc_chksum(struct tx_desc *ptxdesc);
 #define cal_txdesc_chksum rtl8188e_cal_txdesc_chksum
 #ifdef CONFIG_SDIO_HCI || defined(CONFIG_GSPI_HCI)
-extern void rtl8188es_fill_default_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf);
 #define fill_default_txdesc rtl8188es_fill_default_txdesc
 #endif /* CONFIG_SDIO_HCI */
 #endif /* CONFIG_RTL8188E */

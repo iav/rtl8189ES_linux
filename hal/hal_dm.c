@@ -16,55 +16,6 @@
 #include <drv_types.h>
 #include <hal_data.h>
 
-/* A mapping from HalData to ODM. */
-static enum odm_board_type boardType(u8 InterfaceSel)
-{
-	enum odm_board_type        board	= ODM_BOARD_DEFAULT;
-
-#ifdef CONFIG_PCI_HCI
-	INTERFACE_SELECT_PCIE   pcie	= (INTERFACE_SELECT_PCIE)InterfaceSel;
-	switch (pcie) {
-	case INTF_SEL0_SOLO_MINICARD:
-		board |= ODM_BOARD_MINICARD;
-		break;
-	case INTF_SEL1_BT_COMBO_MINICARD:
-		board |= ODM_BOARD_BT;
-		board |= ODM_BOARD_MINICARD;
-		break;
-	default:
-		board = ODM_BOARD_DEFAULT;
-		break;
-	}
-
-#elif defined(CONFIG_USB_HCI)
-	INTERFACE_SELECT_USB    usb	= (INTERFACE_SELECT_USB)InterfaceSel;
-	switch (usb) {
-	case INTF_SEL1_USB_High_Power:
-		board |= ODM_BOARD_EXT_LNA;
-		board |= ODM_BOARD_EXT_PA;
-		break;
-	case INTF_SEL2_MINICARD:
-		board |= ODM_BOARD_MINICARD;
-		break;
-	case INTF_SEL4_USB_Combo:
-		board |= ODM_BOARD_BT;
-		break;
-	case INTF_SEL5_USB_Combo_MF:
-		board |= ODM_BOARD_BT;
-		break;
-	case INTF_SEL0_USB:
-	case INTF_SEL3_USB_Solo:
-	default:
-		board = ODM_BOARD_DEFAULT;
-		break;
-	}
-
-#endif
-	/* RTW_INFO("===> boardType(): (pHalData->InterfaceSel, pDM_Odm->BoardType) = (%d, %d)\n", InterfaceSel, board); */
-
-	return board;
-}
-
 void rtw_hal_update_iqk_fw_offload_cap(_adapter *adapter)
 {
 	PHAL_DATA_TYPE hal = GET_HAL_DATA(adapter);
@@ -106,6 +57,7 @@ void rtw_phydm_iqk_trigger(_adapter *adapter)
 }
 #endif
 
+#ifdef CONFIG_DBG_RF_CAL
 static void rtw_phydm_iqk_trigger_dbg(_adapter *adapter, bool recovery, bool clear, bool segment)
 {
 	struct dm_struct *p_dm_odm = adapter_to_phydm(adapter);
@@ -116,12 +68,15 @@ static void rtw_phydm_iqk_trigger_dbg(_adapter *adapter, bool recovery, bool cle
 		halrf_iqk_trigger(p_dm_odm, recovery);
 #endif
 }
+#endif
+#ifdef CONFIG_DBG_RF_CAL
 static void rtw_phydm_lck_trigger(_adapter *adapter)
 {
 	struct dm_struct *p_dm_odm = adapter_to_phydm(adapter);
 
 	halrf_lck_trigger(p_dm_odm);
 }
+#endif
 #ifdef CONFIG_DBG_RF_CAL
 void rtw_hal_iqk_test(_adapter *adapter, bool recovery, bool clear, bool segment)
 {
@@ -174,7 +129,7 @@ void rtw_hal_update_param_init_fw_offload_cap(_adapter *adapter)
 }
 #endif
 
-void record_ra_info(void *p_dm_void, u8 macid, struct cmn_sta_info *p_sta, u64 ra_mask)
+static void record_ra_info(void *p_dm_void, u8 macid, struct cmn_sta_info *p_sta, u64 ra_mask)
 {
 	struct dm_struct *p_dm = (struct dm_struct *)p_dm_void;
 	_adapter *adapter = p_dm->adapter;
@@ -600,7 +555,7 @@ void rtw_hal_turbo_edca(_adapter *adapter)
 		return;
 	}
 
-	if ((pregpriv->wifi_spec == 1)) { /* || (pmlmeinfo->HT_enable == 0)) */
+	if (pregpriv->wifi_spec == 1) { /* || (pmlmeinfo->HT_enable == 0)) */
 		precvpriv->is_any_non_be_pkts = _FALSE;
 		return;
 	}

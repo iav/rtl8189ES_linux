@@ -56,6 +56,7 @@ BOOLEAN rtw_file_efuse_IsMasked(PADAPTER pAdapter, u16 Offset, u8 *maskbuf)
 
 	return (result > 0) ? 0 : 1;
 }
+#ifdef RTW_HALMAC
 static BOOLEAN efuse_IsBT_Masked(PADAPTER pAdapter, u16 Offset)
 {
 	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(pAdapter);
@@ -79,6 +80,7 @@ static BOOLEAN efuse_IsBT_Masked(PADAPTER pAdapter, u16 Offset)
 #endif /* CONFIG_BT_EFUSE_MASK */
 	return FALSE;
 }
+#endif
 
 void rtw_bt_efuse_mask_array(PADAPTER pAdapter, u8 *pArray)
 {
@@ -2413,8 +2415,7 @@ Efuse_PgPacketWrite(PADAPTER	pAdapter,
 }
 
 
-int
-static Efuse_PgPacketWrite_BT(PADAPTER	pAdapter,
+static int Efuse_PgPacketWrite_BT(PADAPTER	pAdapter,
 			u8			offset,
 			u8			word_en,
 			u8			*data,

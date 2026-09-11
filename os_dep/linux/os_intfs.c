@@ -3180,7 +3180,7 @@ exit:
 	return padapter;
 }
 
-void rtw_drv_stop_vir_if(_adapter *padapter)
+static void rtw_drv_stop_vir_if(_adapter *padapter)
 {
 	struct net_device *pnetdev = NULL;
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
@@ -3222,7 +3222,7 @@ void rtw_drv_stop_vir_if(_adapter *padapter)
 	rtw_cancel_all_timer(padapter);
 }
 
-void rtw_drv_free_vir_if(_adapter *padapter)
+static void rtw_drv_free_vir_if(_adapter *padapter)
 {
 	if (padapter == NULL)
 		return;

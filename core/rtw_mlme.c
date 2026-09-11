@@ -16,7 +16,6 @@
 
 #include <hal_data.h>
 
-extern void indicate_wx_scan_complete_event(_adapter *padapter);
 extern u8 rtw_do_join(_adapter *padapter);
 
 

@@ -138,4 +138,15 @@ int rtw_gw_addr_query(_adapter *padapter);
 int rtw_suspend_common(_adapter *padapter);
 int rtw_resume_common(_adapter *padapter);
 
+void netdev_br_init(struct net_device *netdev);
+int pm_netdev_open(struct net_device *pnetdev, u8 bnormal);
+int pm_netdev_close(struct net_device *pnetdev, u8 bnormal);
+u8 rtw_get_gpio(struct net_device *netdev, u8 gpio_num);
+int rtw_set_gpio_output_value(struct net_device *netdev, u8 gpio_num, bool isHigh);
+int rtw_config_gpio(struct net_device *netdev, u8 gpio_num, bool isOutput);
+int rtw_register_gpio_interrupt(struct net_device *netdev, int gpio_num, void (*callback)(u8 level));
+int rtw_disable_gpio_interrupt(struct net_device *netdev, int gpio_num);
+int rtw_resume_process(_adapter *padapter);
+int rtw_change_ifname(_adapter *padapter, const char *ifname);
+
 #endif /* _OSDEP_INTF_H_ */

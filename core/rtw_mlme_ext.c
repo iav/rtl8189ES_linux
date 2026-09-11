@@ -2195,12 +2195,12 @@ unsigned int OnAuth(_adapter *padapter, union recv_frame *precv_frame)
 				rtw_list_delete(&pstat->asoc_list);
 				pstapriv->asoc_list_cnt--;
 				if (pstat->expire_to > 0)
-					;/* TODO: STA re_auth within expire_to */
+					{ } /* TODO: STA re_auth within expire_to */
 			}
 			_exit_critical_bh(&pstapriv->asoc_list_lock, &irqL);
 
 			if (seq == 1)
-				; /* TODO: STA re_auth and auth timeout */
+				{ } /* TODO: STA re_auth and auth timeout */
 
 		}
 	}
@@ -3129,6 +3129,7 @@ unsigned int OnAtim(_adapter *padapter, union recv_frame *precv_frame)
 	return _SUCCESS;
 }
 
+#ifdef CONFIG_SPCT_CH_SWITCH
 static unsigned int on_action_spct_ch_switch(_adapter *padapter, struct sta_info *psta, u8 *ies, uint ies_len)
 {
 	unsigned int ret = _FAIL;
@@ -3185,6 +3186,7 @@ static unsigned int on_action_spct_ch_switch(_adapter *padapter, struct sta_info
 exit:
 	return ret;
 }
+#endif
 
 unsigned int on_action_spct(_adapter *padapter, union recv_frame *precv_frame)
 {
@@ -10029,7 +10031,7 @@ static int issue_action_ba(_adapter *padapter, unsigned char *raddr, unsigned ch
 	u16	start_seq;
 	u16	BA_para_set;
 	u16	BA_timeout_value;
-	u16	BA_starting_seqctrl;
+	u16	BA_starting_seqctrl = 0;
 	struct xmit_frame		*pmgntframe;
 	struct pkt_attrib		*pattrib;
 	u8					*pframe;
@@ -12532,6 +12534,7 @@ When station does not receive any packet in MAX_CONTINUAL_NORXPACKET_COUNT*2 sec
 recipient station will teardown the block ack by issuing DELBA frame.
 
 *********************************************************************/
+#ifdef CONFIG_ISSUE_DELBA_WHEN_NO_TRAFFIC
 static void rtw_delba_check(_adapter *padapter, struct sta_info *psta, u8 from_timer)
 {
 	int	i = 0;
@@ -12569,6 +12572,7 @@ static void rtw_delba_check(_adapter *padapter, struct sta_info *psta, u8 from_t
 		}
 	}
 }
+#endif
 
 static u8 chk_ap_is_alive(_adapter *padapter, struct sta_info *psta)
 {
@@ -15193,7 +15197,7 @@ operation_by_state:
 
 #ifdef CONFIG_SCAN_BACKOP
 	case SCAN_BACKING_OP: {
-		u8 back_ch, back_bw, back_ch_offset;
+		u8 back_ch = 0, back_bw = 0, back_ch_offset = 0;
 		u8 need_ch_setting_union = _TRUE;
 
 #ifdef CONFIG_MCC_MODE

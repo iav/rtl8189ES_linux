@@ -2412,7 +2412,6 @@ void rtw_free_pwrctrl_priv(PADAPTER adapter)
 }
 
 #ifdef CONFIG_RESUME_IN_WORKQUEUE
-extern int rtw_resume_process(_adapter *padapter);
 
 static void resume_workitem_callback(struct work_struct *work)
 {
@@ -2460,7 +2459,6 @@ inline void rtw_set_do_late_resume(struct pwrctrl_priv *pwrpriv, bool enable)
 #endif
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-extern int rtw_resume_process(_adapter *padapter);
 static void rtw_early_suspend(struct early_suspend *h)
 {
 	struct pwrctrl_priv *pwrpriv = container_of(h, struct pwrctrl_priv, early_suspend);
@@ -2512,7 +2510,6 @@ void rtw_unregister_early_suspend(struct pwrctrl_priv *pwrpriv)
 
 #ifdef CONFIG_ANDROID_POWER
 #if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	extern int rtw_resume_process(PADAPTER padapter);
 #endif
 static void rtw_early_suspend(android_early_suspend_t *h)
 {

@@ -326,7 +326,11 @@ void phydm_config_cck_tx_path(void *dm_void, enum bb_path path)
 #endif
 }
 
-void phydm_config_trx_path_v2(void *dm_void, char input[][16], u32 *_used,
+#if (RTL8822B_SUPPORT || RTL8197F_SUPPORT ||\
+RTL8192F_SUPPORT || RTL8822C_SUPPORT ||\
+RTL8814B_SUPPORT || RTL8812F_SUPPORT ||\
+RTL8197G_SUPPORT)
+static void phydm_config_trx_path_v2(void *dm_void, char input[][16], u32 *_used,
 			      char *output, u32 *_out_len)
 {
 #if (RTL8822B_SUPPORT || RTL8197F_SUPPORT || RTL8192F_SUPPORT ||\
@@ -347,7 +351,7 @@ void phydm_config_trx_path_v2(void *dm_void, char input[][16], u32 *_used,
 		return;
 
 	for (i = 0; i < 5; i++) {
-		if (input[i + 1]) {
+		if (input[i + 1][0]) {
 			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &val[i]);
 			input_idx++;
 		}
@@ -390,8 +394,10 @@ void phydm_config_trx_path_v2(void *dm_void, char input[][16], u32 *_used,
 	}
 #endif
 }
+#endif
 
-void phydm_config_trx_path_v1(void *dm_void, char input[][16], u32 *_used,
+#if (RTL8192E_SUPPORT || RTL8812A_SUPPORT)
+static void phydm_config_trx_path_v1(void *dm_void, char input[][16], u32 *_used,
 			      char *output, u32 *_out_len)
 {
 #if (RTL8192E_SUPPORT || RTL8812A_SUPPORT)
@@ -406,7 +412,7 @@ void phydm_config_trx_path_v1(void *dm_void, char input[][16], u32 *_used,
 		return;
 
 	for (i = 0; i < 5; i++) {
-		if (input[i + 1]) {
+		if (input[i + 1][0]) {
 			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &val[i]);
 			input_idx++;
 		}
@@ -464,6 +470,7 @@ void phydm_config_trx_path_v1(void *dm_void, char input[][16], u32 *_used,
 	*_out_len = out_len;
 #endif
 }
+#endif
 
 void phydm_config_trx_path(void *dm_void, char input[][16], u32 *_used,
 			   char *output, u32 *_out_len)
@@ -762,7 +769,7 @@ void phydm_set_ext_switch(void *dm_void, u32 ext_ant_switch)
 #endif
 }
 
-void phydm_csi_mask_enable(void *dm_void, u32 enable)
+static void phydm_csi_mask_enable(void *dm_void, u32 enable)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	boolean en = false;
@@ -786,7 +793,7 @@ void phydm_csi_mask_enable(void *dm_void, u32 enable)
 	}
 }
 
-void phydm_clean_all_csi_mask(void *dm_void)
+static void phydm_clean_all_csi_mask(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 
@@ -825,7 +832,7 @@ void phydm_clean_all_csi_mask(void *dm_void)
 	}
 }
 
-void phydm_set_csi_mask(void *dm_void, u32 tone_idx_tmp, u8 tone_direction)
+static void phydm_set_csi_mask(void *dm_void, u32 tone_idx_tmp, u8 tone_direction)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	u8 byte_offset = 0, bit_offset = 0;
@@ -884,7 +891,7 @@ void phydm_set_csi_mask(void *dm_void, u32 tone_idx_tmp, u8 tone_direction)
 		  (tone_idx_tmp + tone_num_shift), target_reg, reg_tmp_value);
 }
 
-void phydm_set_nbi_reg(void *dm_void, u32 tone_idx_tmp, u32 bw)
+static void phydm_set_nbi_reg(void *dm_void, u32 tone_idx_tmp, u32 bw)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	/*tone_idx X 10*/
@@ -979,7 +986,7 @@ void phydm_nbi_enable(void *dm_void, u32 enable)
 	}
 }
 
-u8 phydm_find_fc(void *dm_void, u32 channel, u32 bw, u32 second_ch, u32 *fc_in)
+static u8 phydm_find_fc(void *dm_void, u32 channel, u32 bw, u32 second_ch, u32 *fc_in)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	u32 fc = *fc_in;
@@ -1054,7 +1061,7 @@ u8 phydm_find_fc(void *dm_void, u32 channel, u32 bw, u32 second_ch, u32 *fc_in)
 	return PHYDM_SET_SUCCESS;
 }
 
-u8 phydm_find_intf_distance(void *dm_void, u32 bw, u32 fc, u32 f_interference,
+static u8 phydm_find_intf_distance(void *dm_void, u32 bw, u32 fc, u32 f_interference,
 			    u32 *tone_idx_tmp_in)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
@@ -1699,7 +1706,7 @@ void phydm_nbi_debug(void *dm_void, char input[][16], u32 *_used, char *output,
 	else
 		idx_lmt = 5;
 	for (i = 0; i < idx_lmt; i++) {
-		if (input[i + 1]) {
+		if (input[i + 1][0]) {
 			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &val[i]);
 			input_idx++;
 		}
@@ -1791,7 +1798,7 @@ void phydm_csi_debug(void *dm_void, char input[][16], u32 *_used, char *output,
 		idx_lmt = 5;
 
 	for (i = 0; i < idx_lmt; i++) {
-		if (input[i + 1]) {
+		if (input[i + 1][0]) {
 			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &val[i]);
 			input_idx++;
 		}
@@ -1876,7 +1883,7 @@ void phydm_stop_ck320(void *dm_void, u8 enable)
 	}
 }
 
-boolean
+static boolean
 phydm_bb_ctrl_txagc_ofst(void *dm_void, s8 pw_offset, /*@(unit: dB)*/
 			 u8 add_half_db /*@(+0.5 dB)*/)
 {
@@ -2575,8 +2582,8 @@ u8 config_phydm_read_txagc_n(void *dm_void, enum rf_path path, u8 hw_rate)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	u8 read_back_data = INVALID_TXAGC_DATA;
-	u32 reg_txagc;
-	u32 reg_mask;
+	u32 reg_txagc = 0;
+	u32 reg_mask = 0;
 	/* This function is for 92E/88E etc... */
 	/* @Input need to be HW rate index, not driver rate index!!!! */
 

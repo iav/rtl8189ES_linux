@@ -1713,7 +1713,7 @@ void dump_ht_cap_ie_content(void *sel, const u8 *buf, u32 buf_len)
 		      , HT_SUP_MCS_SET_ARG(HT_CAP_ELE_SUP_MCS_SET(buf)));
 }
 
-void dump_ht_cap_ie(void *sel, const u8 *ie, u32 ie_len)
+static void dump_ht_cap_ie(void *sel, const u8 *ie, u32 ie_len)
 {
 	const u8 *ht_cap_ie;
 	sint ht_cap_ielen;

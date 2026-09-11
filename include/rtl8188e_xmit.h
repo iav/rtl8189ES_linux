@@ -292,4 +292,7 @@ void rtl8188e_cal_txdesc_chksum(struct tx_desc	*ptxdesc);
 #endif /* CONFIG_XMIT_ACK */
 
 void _dbg_dump_tx_info(_adapter	*padapter, int frame_tag, struct tx_desc *ptxdesc);
+
+void rtl8188es_fill_default_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf);
+
 #endif /* __RTL8188E_XMIT_H__ */

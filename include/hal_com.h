@@ -804,4 +804,7 @@ static inline void rtw_enter_protsel_macsleep(_adapter *padapter, u8 port_sel) {
 static inline bool rtw_assert_protsel_macsleep(_adapter *padapter, u32 addr, u8 len) {return true; }
 static inline void rtw_leave_protsel_macsleep(_adapter *padapter) {}
 #endif
+
+u8 MgntQuery_NssTxRate(u16 Rate);
+
 #endif /* __HAL_COMMON_H__ */

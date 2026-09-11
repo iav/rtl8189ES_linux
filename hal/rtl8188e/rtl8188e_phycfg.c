@@ -1298,35 +1298,7 @@ exit:
 	return bias;
 }
 
-void
-PHY_ScanOperationBackup8188E(
-		PADAPTER	Adapter,
-		u8		Operation
-)
-{
-#if 0
-	IO_TYPE	IoType;
-
-	if (!rtw_is_drv_stopped(padapter)) {
-		switch (Operation) {
-		case SCAN_OPT_BACKUP:
-			IoType = IO_CMD_PAUSE_DM_BY_SCAN;
-			rtw_hal_set_hwreg(Adapter, HW_VAR_IO_CMD, (u8 *)&IoType);
-
-			break;
-
-		case SCAN_OPT_RESTORE:
-			IoType = IO_CMD_RESUME_DM_BY_SCAN;
-			rtw_hal_set_hwreg(Adapter, HW_VAR_IO_CMD, (u8 *)&IoType);
-			break;
-
-		default:
-			break;
-		}
-	}
-#endif
-}
-void
+static void
 phy_SpurCalibration_8188E(
 		PADAPTER			Adapter
 )

@@ -204,4 +204,6 @@ void phydm_mcc_init(void *dm_void);
 void phydm_mcc_switch(void *dm_void);
 #endif /*#ifdef CONFIG_MCC_DM*/
 
+u8 config_phydm_read_txagc_n(void *dm_void, enum rf_path path, u8 hw_rate);
+
 #endif

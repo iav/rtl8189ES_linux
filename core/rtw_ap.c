@@ -2808,105 +2808,6 @@ int rtw_ap_set_wep_key(_adapter *padapter, u8 *key, u8 keylen, int keyid, u8 set
 	return rtw_ap_set_key(padapter, key, alg, keyid, set_tx);
 }
 
-static u8 rtw_ap_bmc_frames_hdl(_adapter *padapter)
-{
-#define HIQ_XMIT_COUNTS (6)
-	_irqL irqL;
-	struct sta_info *psta_bmc;
-	_list	*xmitframe_plist, *xmitframe_phead;
-	struct xmit_frame *pxmitframe = NULL;
-	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
-	struct sta_priv  *pstapriv = &padapter->stapriv;
-	bool update_tim = _FALSE;
-
-
-	if (padapter->registrypriv.wifi_spec != 1)
-		return H2C_SUCCESS;
-
-
-	psta_bmc = rtw_get_bcmc_stainfo(padapter);
-	if (!psta_bmc)
-		return H2C_SUCCESS;
-
-
-	_enter_critical_bh(&pxmitpriv->lock, &irqL);
-
-	if ((rtw_tim_map_is_set(padapter, pstapriv->tim_bitmap, 0)) && (psta_bmc->sleepq_len > 0)) {
-		int tx_counts = 0;
-
-		_update_beacon(padapter, _TIM_IE_, NULL, _FALSE, 0, "update TIM with TIB=1");
-
-		RTW_INFO("sleepq_len of bmc_sta = %d\n", psta_bmc->sleepq_len);
-
-		xmitframe_phead = get_list_head(&psta_bmc->sleep_q);
-		xmitframe_plist = get_next(xmitframe_phead);
-
-		while ((rtw_end_of_queue_search(xmitframe_phead, xmitframe_plist)) == _FALSE) {
-			pxmitframe = LIST_CONTAINOR(xmitframe_plist, struct xmit_frame, list);
-
-			xmitframe_plist = get_next(xmitframe_plist);
-
-			rtw_list_delete(&pxmitframe->list);
-
-			psta_bmc->sleepq_len--;
-			tx_counts++;
-
-			if (psta_bmc->sleepq_len > 0)
-				pxmitframe->attrib.mdata = 1;
-			else
-				pxmitframe->attrib.mdata = 0;
-
-			if (tx_counts == HIQ_XMIT_COUNTS)
-				pxmitframe->attrib.mdata = 0;
-
-			pxmitframe->attrib.triggered = 1;
-
-			if (xmitframe_hiq_filter(pxmitframe) == _TRUE)
-				pxmitframe->attrib.qsel = QSLT_HIGH;/*HIQ*/
-
-			rtw_hal_xmitframe_enqueue(padapter, pxmitframe);
-
-			if (tx_counts == HIQ_XMIT_COUNTS)
-				break;
-
-		}
-
-	} else {
-		if (psta_bmc->sleepq_len == 0) {
-
-			/*RTW_INFO("sleepq_len of bmc_sta = %d\n", psta_bmc->sleepq_len);*/
-
-			if (rtw_tim_map_is_set(padapter, pstapriv->tim_bitmap, 0))
-				update_tim = _TRUE;
-
-			rtw_tim_map_clear(padapter, pstapriv->tim_bitmap, 0);
-			rtw_tim_map_clear(padapter, pstapriv->sta_dz_bitmap, 0);
-
-			if (update_tim == _TRUE) {
-				RTW_INFO("clear TIB\n");
-				_update_beacon(padapter, _TIM_IE_, NULL, _TRUE, 0, "bmc sleepq and HIQ empty");
-			}
-		}
-	}
-
-	_exit_critical_bh(&pxmitpriv->lock, &irqL);
-
-#if 0
-	/* HIQ Check */
-	rtw_hal_get_hwreg(padapter, HW_VAR_CHK_HI_QUEUE_EMPTY, &empty);
-
-	while (_FALSE == empty && rtw_get_passing_time_ms(start) < 3000) {
-		rtw_msleep_os(100);
-		rtw_hal_get_hwreg(padapter, HW_VAR_CHK_HI_QUEUE_EMPTY, &empty);
-	}
-
-
-	printk("check if hiq empty=%d\n", empty);
-#endif
-
-	return H2C_SUCCESS;
-}
-
 #ifdef CONFIG_NATIVEAP_MLME
 
 static void associated_stainfo_update(_adapter *padapter, struct sta_info *psta, u32 sta_info_type)
@@ -4400,7 +4301,7 @@ static u8 rtw_ap_update_chbw_by_ifbmp(struct dvobj_priv *dvobj, u8 ifbmp
 	int i;
 
 	for (i = 0; i < dvobj->iface_nums; i++) {
-		if (!(ifbmp & BIT(i)) || !dvobj->padapters)
+		if (!(ifbmp & BIT(i)))
 			continue;
 
 		iface = dvobj->padapters[i];
@@ -4420,7 +4321,7 @@ static u8 rtw_ap_update_chbw_by_ifbmp(struct dvobj_priv *dvobj, u8 ifbmp
 	}
 
 	for (i = 0; i < dvobj->iface_nums; i++) {
-		if (!(ifbmp & BIT(i)) || !dvobj->padapters)
+		if (!(ifbmp & BIT(i)))
 			continue;
 
 		iface = dvobj->padapters[i];

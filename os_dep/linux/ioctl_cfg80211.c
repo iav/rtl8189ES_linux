@@ -1042,7 +1042,7 @@ void rtw_cfg80211_indicate_connect(_adapter *padapter)
 	struct wifidirect_info *pwdinfo = &(padapter->wdinfo);
 #endif
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
-	struct cfg80211_roam_info roam_info ={};
+	struct cfg80211_roam_info *roam_info = &pwdev_priv->roam_info;
 #endif
 
 	RTW_INFO(FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
@@ -1115,17 +1115,18 @@ check_bss:
 		#endif
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
+		memset(roam_info, 0, sizeof(*roam_info));
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 0, 0))
-		roam_info.links[0].bssid = cur_network->network.MacAddress;
+		roam_info->links[0].bssid = cur_network->network.MacAddress;
 #else
-		roam_info.bssid = cur_network->network.MacAddress;
+		roam_info->bssid = cur_network->network.MacAddress;
 #endif
-		roam_info.req_ie = pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2;
-		roam_info.req_ie_len = pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2;
-		roam_info.resp_ie = pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6;
-		roam_info.resp_ie_len = pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6;
+		roam_info->req_ie = pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2;
+		roam_info->req_ie_len = pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2;
+		roam_info->resp_ie = pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6;
+		roam_info->resp_ie_len = pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6;
 
-		cfg80211_roamed(padapter->pnetdev, &roam_info, GFP_ATOMIC);
+		cfg80211_roamed(padapter->pnetdev, roam_info, GFP_ATOMIC);
 		#else
 		cfg80211_roamed(padapter->pnetdev
 			#if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 39) || defined(COMPAT_KERNEL_RELEASE)
@@ -4190,6 +4191,7 @@ static int cfg80211_rtw_disconnect(struct wiphy *wiphy, struct net_device *ndev,
 }
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 31))
+#ifdef CONFIG_RTW_DEBUG
 static const char *nl80211_tx_power_setting_str(int type)
 {
 	switch (type) {
@@ -4203,6 +4205,7 @@ static const char *nl80211_tx_power_setting_str(int type)
 		return "UNKNOWN";
 	};
 }
+#endif
 
 static int cfg80211_rtw_set_txpower(struct wiphy *wiphy,
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 8, 0))
