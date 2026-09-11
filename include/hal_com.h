@@ -738,4 +738,6 @@ u8 phy_get_current_tx_num(PADAPTER pAdapter, u8 Rate);
 u8 * rtw_hal_set_8812a_vendor_ie(_adapter *padapter , u8 *pframe ,uint *frlen );
 #endif
 
+u8 MgntQuery_NssTxRate(u16 Rate);
+
 #endif /* __HAL_COMMON_H__ */

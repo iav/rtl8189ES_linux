@@ -16,7 +16,7 @@
 
 #include <drv_types.h>
 
-bool test_st_match_rule(_adapter *adapter, u8 *local_naddr, u8 *local_port, u8 *remote_naddr, u8 *remote_port)
+static bool test_st_match_rule(_adapter *adapter, u8 *local_naddr, u8 *local_port, u8 *remote_naddr, u8 *remote_port)
 {
 	if (ntohs(*((u16 *)local_port)) == 5001 || ntohs(*((u16 *)remote_port)) == 5001)
 		return _TRUE;
@@ -381,8 +381,7 @@ void rtw_mfree_stainfo(struct sta_info *psta);
 void rtw_mfree_stainfo(struct sta_info *psta)
 {
 
-	if (&psta->lock != NULL)
-		_rtw_spinlock_free(&psta->lock);
+	_rtw_spinlock_free(&psta->lock);
 
 	_rtw_free_sta_xmit_priv_lock(&psta->sta_xmitpriv);
 	_rtw_free_sta_recv_priv_lock(&psta->sta_recvpriv);
@@ -1070,7 +1069,7 @@ const char *const _acl_mode_str[RTW_ACL_MODE_MAX] = {
 	"DENY_UNLESS_LISTED",
 };
 
-u8 _rtw_access_ctrl(_adapter *adapter, u8 period, const u8 *mac_addr)
+static u8 _rtw_access_ctrl(_adapter *adapter, u8 period, const u8 *mac_addr)
 {
 	u8 res = _TRUE;
 	_irqL irqL;

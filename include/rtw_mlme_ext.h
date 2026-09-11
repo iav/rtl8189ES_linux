@@ -1308,4 +1308,8 @@ static struct fwevent wlanevents[] = {
 
 #endif/* _RTW_MLME_EXT_C_ */
 
+
+
+int update_hidden_ssid(u8 *ies, u32 ies_len, u8 hidden_ssid_mode);
+
 #endif

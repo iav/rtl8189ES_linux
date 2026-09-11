@@ -440,9 +440,7 @@ static const unsigned long K[64] = {
 #ifndef MIN
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #endif
-#ifdef CONFIG_IEEE80211W
 int omac1_aes_128(const u8 *key, const u8 *data, size_t data_len, u8 *mac);
-#endif /* CONFIG_IEEE80211W */
 #ifdef CONFIG_RTW_MESH_AEK
 int aes_siv_encrypt(const u8 *key, const u8 *pw, size_t pwlen
 	, size_t num_elem, const u8 *addr[], const size_t *len, u8 *out);

@@ -1900,9 +1900,6 @@ int proc_get_rate_ctl(struct seq_file *m, void *v)
 	return 0;
 }
 
-#ifdef 	CONFIG_PHDYM_FW_FIXRATE
-void phydm_fw_fix_rate(void *dm_void, u8 en, u8	macid, u8 bw, u8 rate);
-#endif
 ssize_t proc_set_rate_ctl(struct file *file, const char __user *buffer, size_t count, loff_t *pos, void *data)
 {
 	struct net_device *dev = data;

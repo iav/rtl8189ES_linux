@@ -2169,7 +2169,7 @@ void rtw_hal_update_sta_wset(_adapter *adapter, struct sta_info *psta)
 	psta->cmn.support_wireless_set = w_set;
 }
 
-void rtw_hal_update_sta_mimo_type(_adapter *adapter, struct sta_info *psta)
+static void rtw_hal_update_sta_mimo_type(_adapter *adapter, struct sta_info *psta)
 {
 	s8 tx_nss, rx_nss;
 
@@ -2202,7 +2202,7 @@ void rtw_hal_update_sta_mimo_type(_adapter *adapter, struct sta_info *psta)
 			psta->cmn.mac_id, tx_nss, rx_nss);
 }
 
-void rtw_hal_update_sta_smps_cap(_adapter *adapter, struct sta_info *psta)
+static void rtw_hal_update_sta_smps_cap(_adapter *adapter, struct sta_info *psta)
 {
 	/*Spatial Multiplexing Power Save*/
 #if 0
@@ -2240,7 +2240,7 @@ u8 rtw_get_mgntframe_raid(_adapter *adapter, unsigned char network_type)
 	return raid;
 }
 
-void rtw_hal_update_sta_rate_mask(PADAPTER padapter, struct sta_info *psta)
+static void rtw_hal_update_sta_rate_mask(PADAPTER padapter, struct sta_info *psta)
 {
 	struct hal_spec_t *hal_spec = GET_HAL_SPEC(padapter);
 	u8 i, rf_type, tx_nss;
@@ -4777,7 +4777,7 @@ inline s32 rtw_hal_set_FwMediaStatusRpt_range_cmd(_adapter *adapter, bool opmode
 	return rtw_hal_set_FwMediaStatusRpt_cmd(adapter, opmode, miracast, miracast_sink, role, macid, 1, macid_end);
 }
 
-void rtw_hal_set_FwRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
+static void rtw_hal_set_FwRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
 {
 	struct	hal_ops *pHalFunc = &padapter->hal_func;
 	u8	u1H2CRsvdPageParm[H2C_RSVDPAGE_LOC_LEN] = {0};
@@ -4922,7 +4922,7 @@ void rtw_hal_set_input_gpio(_adapter *padapter, u8 index)
 
 #endif
 
-void rtw_hal_set_FwAoacRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
+static void rtw_hal_set_FwAoacRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
 {
 	struct	hal_ops *pHalFunc = &padapter->hal_func;
 	struct	pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
@@ -6347,41 +6347,6 @@ static void rtw_hal_ap_wow_disable(_adapter *padapter)
 #endif /*CONFIG_AP_WOWLAN*/
 
 #ifdef CONFIG_P2P_WOWLAN
-static int update_hidden_ssid(u8 *ies, u32 ies_len, u8 hidden_ssid_mode)
-{
-	u8 *ssid_ie;
-	sint ssid_len_ori;
-	int len_diff = 0;
-
-	ssid_ie = rtw_get_ie(ies,  WLAN_EID_SSID, &ssid_len_ori, ies_len);
-
-	/* RTW_INFO("%s hidden_ssid_mode:%u, ssid_ie:%p, ssid_len_ori:%d\n", __FUNCTION__, hidden_ssid_mode, ssid_ie, ssid_len_ori); */
-
-	if (ssid_ie && ssid_len_ori > 0) {
-		switch (hidden_ssid_mode) {
-		case 1: {
-			u8 *next_ie = ssid_ie + 2 + ssid_len_ori;
-			u32 remain_len = 0;
-
-			remain_len = ies_len - (next_ie - ies);
-
-			ssid_ie[1] = 0;
-			_rtw_memcpy(ssid_ie + 2, next_ie, remain_len);
-			len_diff -= ssid_len_ori;
-
-			break;
-		}
-		case 2:
-			_rtw_memset(&ssid_ie[2], 0, ssid_len_ori);
-			break;
-		default:
-			break;
-		}
-	}
-
-	return len_diff;
-}
-
 static void rtw_hal_construct_P2PBeacon(_adapter *padapter, u8 *pframe, u32 *pLength)
 {
 	/* struct xmit_frame	*pmgntframe; */
@@ -8023,7 +7988,7 @@ void rtw_hal_construct_NullFunctionData(
 	*pLength = pktlen;
 }
 
-void rtw_hal_construct_ProbeRsp(_adapter *padapter, u8 *pframe, u32 *pLength,
+static void rtw_hal_construct_ProbeRsp(_adapter *padapter, u8 *pframe, u32 *pLength,
 				BOOLEAN bHideSSID)
 {
 	struct rtw_ieee80211_hdr	*pwlanhdr;
@@ -12056,7 +12021,7 @@ s32 rtw_hal_set_wifi_btc_port_id_cmd(_adapter *adapter)
 #endif
 
 #define LPS_ACTIVE_TIMEOUT	10 /*number of times*/
-void rtw_lps_state_chk(_adapter *adapter, u8 ps_mode)
+static void rtw_lps_state_chk(_adapter *adapter, u8 ps_mode)
 {
 	if (ps_mode == PS_MODE_ACTIVE) {
 		u8 ps_ready = _FALSE;
@@ -15023,7 +14988,7 @@ void rtw_dump_phy_cap_by_phydmapi(void *sel, _adapter *adapter)
 	#endif
 }
 #else
-void rtw_dump_phy_cap_by_hal(void *sel, _adapter *adapter)
+static void rtw_dump_phy_cap_by_hal(void *sel, _adapter *adapter)
 {
 	u8 phy_cap = _FALSE;
 

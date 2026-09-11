@@ -181,7 +181,7 @@ void hal_mpt_CCKTxPowerAdjust(PADAPTER Adapter, BOOLEAN bInCH14)
 	} else if (IS_HARDWARE_TYPE_8723D(Adapter)) {
 		/* 2.4G CCK TX DFIR */
 		/* 2016.01.20 Suggest from RS BB mingzhi*/
-		if ((u1Channel == 14)) {
+		if (u1Channel == 14) {
 			phy_set_bb_reg(Adapter, rCCK0_TxFilter2, bMaskDWord, 0x0000B81C);
 			phy_set_bb_reg(Adapter, rCCK0_DebugPort, bMaskDWord, 0x00000000);
 			phy_set_bb_reg(Adapter, 0xAAC, bMaskDWord, 0x00003667);
@@ -369,7 +369,7 @@ void hal_mpt_SetBandwidth(PADAPTER pAdapter)
 
 }
 
-void mpt_SetTxPower_Old(PADAPTER pAdapter, MPT_TXPWR_DEF Rate, u8 *pTxPower)
+static void mpt_SetTxPower_Old(PADAPTER pAdapter, MPT_TXPWR_DEF Rate, u8 *pTxPower)
 {
 	switch (Rate) {
 	case MPT_CCK: {
@@ -427,7 +427,7 @@ void mpt_SetTxPower_Old(PADAPTER pAdapter, MPT_TXPWR_DEF Rate, u8 *pTxPower)
 	RTW_INFO("<===mpt_SetTxPower_Old()\n");
 }
 
-void
+static void
 mpt_SetTxPower(
 	PADAPTER		pAdapter,
 	MPT_TXPWR_DEF	Rate,
@@ -1283,7 +1283,7 @@ void mpt_SetRFPath_8723D(PADAPTER pAdapter)
 }
 #endif
 
-void mpt_SetRFPath_819X(PADAPTER	pAdapter)
+static void mpt_SetRFPath_819X(PADAPTER	pAdapter)
 {
 	HAL_DATA_TYPE			*pHalData	= GET_HAL_DATA(pAdapter);
 	PMPT_CONTEXT		pMptCtx = &(pAdapter->mppriv.mpt_ctx);

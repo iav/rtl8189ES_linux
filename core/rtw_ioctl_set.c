@@ -18,7 +18,6 @@
 #include <hal_data.h>
 
 
-extern void indicate_wx_scan_complete_event(_adapter *padapter);
 
 #define IS_MAC_ADDRESS_BROADCAST(addr) \
 	(\

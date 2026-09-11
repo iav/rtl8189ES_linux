@@ -271,4 +271,6 @@ u32 rtw_read_macaddr_from_file(const char *path, u8 *buf);
 #endif /* CONFIG_EFUSE_CONFIG_FILE */
 #endif /* PLATFORM_LINUX */
 
+int Efuse_PgPacketWrite_BT(PADAPTER pAdapter, u8 offset, u8 word_en, u8 *data, BOOLEAN bPseudoTest);
+
 #endif

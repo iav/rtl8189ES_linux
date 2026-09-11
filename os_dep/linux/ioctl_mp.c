@@ -634,15 +634,15 @@ int rtw_mp_txpower_index(struct net_device *dev,
 		sprintf(extra, "patha=%d", txpower_inx);
 		if (phal_data->rf_type > RF_1T2R) {
 			txpower_inx = mpt_ProQueryCalTxPower(padapter, 1);
-			sprintf(extra, "%s,pathb=%d", extra, txpower_inx);
+			sprintf(extra + strlen(extra), ",pathb=%d", txpower_inx);
 		}
 		if (phal_data->rf_type > RF_2T4R) {
 			txpower_inx = mpt_ProQueryCalTxPower(padapter, 2);
-			sprintf(extra, "%s,pathc=%d", extra, txpower_inx);
+			sprintf(extra + strlen(extra), ",pathc=%d", txpower_inx);
 		}
 		if (phal_data->rf_type > RF_3T4R) {
 			txpower_inx = mpt_ProQueryCalTxPower(padapter, 3);
-			sprintf(extra, "%s,pathd=%d", extra, txpower_inx);
+			sprintf(extra + strlen(extra), ",pathd=%d", txpower_inx);
 		}
 	}
 	wrqu->length = strlen(extra);
@@ -2476,11 +2476,11 @@ int rtw_bt_efuse_mask_file(struct net_device *dev,
 		 } while (count < 64);
 
 		for (i = 0; i < count; i++)
-			sprintf(extra, "%s:%02x", extra, btmaskfileBuffer[i]);
+			sprintf(extra + strlen(extra), ":%02x", btmaskfileBuffer[i]);
 
 		padapter->registrypriv.bBTFileMaskEfuse = _TRUE;
 
-		sprintf(extra, "%s\nLoad BT Efuse Mask data %d hex ok\n", extra, count);
+		sprintf(extra + strlen(extra), "\nLoad BT Efuse Mask data %d hex ok\n", count);
 		wrqu->data.length = strlen(extra);
 		return 0;
 	}
@@ -2564,11 +2564,11 @@ int rtw_efuse_mask_file(struct net_device *dev,
 		 } while (count < 64);
 
 		for (i = 0; i < count; i++)
-			sprintf(extra, "%s:%02x", extra, maskfileBuffer[i]);
+			sprintf(extra + strlen(extra), ":%02x", maskfileBuffer[i]);
 
 		padapter->registrypriv.bFileMaskEfuse = _TRUE;
 
-		sprintf(extra, "%s\nLoad Efuse Mask data %d hex ok\n", extra, count);
+		sprintf(extra + strlen(extra), "\nLoad Efuse Mask data %d hex ok\n", count);
 		wrqu->data.length = strlen(extra);
 		return 0;
 	}
@@ -2752,7 +2752,7 @@ int rtw_mp_link(struct net_device *dev,
 		/* tmp[0],[1],[2] */
 		/* txdata,00e04c871200........... */
 		if (strcmp(tmp[0], "txdata") == 0) {
-			if ((tmp[1] == NULL)) {
+			if (tmp[1] == NULL) {
 				err = -EINVAL;
 				goto exit;
 			}
@@ -3192,11 +3192,11 @@ todo:
 			if ((pMptCtx->mptOutBuf[i] == 0x00) && (pMptCtx->mptOutBuf[i + 1] == 0x00))
 				goto exit;
 
-			sprintf(extra, "%s %d ", extra, (pMptCtx->mptOutBuf[i] & 0x1f));
+			sprintf(extra + strlen(extra), " %d ", (pMptCtx->mptOutBuf[i] & 0x1f));
 		}
 	} else {
 		for (i = 4; i < pMptCtx->mptOutLen; i++)
-			sprintf(extra, "%s 0x%x ", extra, pMptCtx->mptOutBuf[i]);
+			sprintf(extra + strlen(extra), " 0x%x ", pMptCtx->mptOutBuf[i]);
 	}
 
 exit:

@@ -517,7 +517,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
  *	_SUCCESS	ok
  *	_FAIL		something error
  */
-s32 rtl8188fs_xmit_handler(PADAPTER padapter)
+static s32 rtl8188fs_xmit_handler(PADAPTER padapter)
 {
 	struct xmit_priv *pxmitpriv;
 	s32 ret;
@@ -591,14 +591,14 @@ thread_return rtl8188fs_xmit_thread(thread_context context)
 	s32 ret;
 	PADAPTER padapter;
 	struct xmit_priv *pxmitpriv;
-	u8 thread_name[20] = "RTWHALXT";
+	u8 thread_name[32];
 
 
 	ret = _SUCCESS;
 	padapter = (PADAPTER)context;
 	pxmitpriv = &padapter->xmitpriv;
 
-	rtw_sprintf(thread_name, 20, "%s-"ADPT_FMT, thread_name, ADPT_ARG(padapter));
+	rtw_sprintf(thread_name, sizeof(thread_name), "RTWHALXT-"ADPT_FMT, ADPT_ARG(padapter));
 	thread_enter(thread_name);
 
 	RTW_INFO("start "FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));

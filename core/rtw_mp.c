@@ -300,7 +300,7 @@ static void PHY_SetRFPathSwitch_default(
 }
 #endif
 
-void mpt_InitHWConfig(PADAPTER Adapter)
+static void mpt_InitHWConfig(PADAPTER Adapter)
 {
 	PHAL_DATA_TYPE hal;
 
@@ -1162,7 +1162,7 @@ int SetTxPower(PADAPTER pAdapter)
 	return _TRUE;
 }
 
-void SetTxAGCOffset(PADAPTER pAdapter, u32 ulTxAGCOffset)
+static void SetTxAGCOffset(PADAPTER pAdapter, u32 ulTxAGCOffset)
 {
 	u32 TxAGCOffset_B, TxAGCOffset_C, TxAGCOffset_D, tmpAGC;
 
@@ -1686,7 +1686,7 @@ void fill_tx_desc_8703b(PADAPTER padapter)
 #endif
 
 #if defined(CONFIG_RTL8188F)
-void fill_tx_desc_8188f(PADAPTER padapter)
+static void fill_tx_desc_8188f(PADAPTER padapter)
 {
 	struct mp_priv *pmp_priv = &padapter->mppriv;
 	struct pkt_attrib *pattrib = &(pmp_priv->tx.attrib);
@@ -2410,7 +2410,7 @@ u32 mp_query_psd(PADAPTER pAdapter, u8 *data)
 
 			i = 0;
 			while (i < 256) {
-				sprintf(data, "%s%x ", data, (psdbuf[i]));
+				sprintf(data + strlen(data), "%x ", (psdbuf[i]));
 				i++;
 			}
 
@@ -2425,7 +2425,7 @@ u32 mp_query_psd(PADAPTER pAdapter, u8 *data)
 		else
 			psd_data = rtw_GetPSDData(pAdapter, i);
 
-		sprintf(data, "%s%x ", data, psd_data);
+		sprintf(data + strlen(data), "%x ", psd_data);
 		i++;
 	}
 

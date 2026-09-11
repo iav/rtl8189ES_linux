@@ -687,7 +687,7 @@ static void sd_intf_stop(PADAPTER padapter)
 PADAPTER g_test_adapter = NULL;
 #endif /* RTW_SUPPORT_PLATFORM_SHUTDOWN */
 
-_adapter *rtw_sdio_primary_adapter_init(struct dvobj_priv *dvobj)
+static _adapter *rtw_sdio_primary_adapter_init(struct dvobj_priv *dvobj)
 {
 	int status = _FAIL;
 	PADAPTER padapter = NULL;
@@ -1058,8 +1058,6 @@ static void rtw_dev_shutdown(struct device *dev)
 }
 #endif
 
-extern int pm_netdev_open(struct net_device *pnetdev, u8 bnormal);
-extern int pm_netdev_close(struct net_device *pnetdev, u8 bnormal);
 
 static int rtw_sdio_suspend(struct device *dev)
 {
